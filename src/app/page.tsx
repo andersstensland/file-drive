@@ -2,12 +2,17 @@
 
 import { Button } from "@/components/ui/button";
 import { SignOutButton, SignedIn, SignedOut } from "@clerk/clerk-react";
-import { SignInButton, useSession } from "@clerk/nextjs";
+import { SignInButton, useOrganization, useSession } from "@clerk/nextjs";
 import { useMutation, useQueries, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
 export default function Home() {
-  const files = useQuery(api.files.getFiles);
+  const { organization } = useOrganization();
+  console.log(organization?.id);
+  const files = useQuery(
+    api.files.getFiles,
+    organization?.id ? { orgId: organization.id } : "skip"
+  );
   const createFile = useMutation(api.files.createFile);
 
   return (
@@ -29,8 +34,10 @@ export default function Home() {
 
       <Button
         onClick={() => {
+          if (!organization) return;
           createFile({
             name: "hello world",
+            orgId: organization?.id,
           });
         }}
       >
