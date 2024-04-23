@@ -22,18 +22,6 @@ export default function Home() {
       {files?.map((file) => {
         return <div key={file._id}>{file.name}</div>;
       })}
-
-      <Button
-        onClick={() => {
-          if (!orgId) return;
-          createFile({
-            name: "hello world",
-            orgId,
-          });
-        }}
-      >
-        Click Me
-      </Button>
     </main>
   );
 }
